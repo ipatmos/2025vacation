@@ -92,8 +92,7 @@ const employees = [
         name: "조슬기",
         color: "#66BB6A",
         vacations: [
-            {start: "2025-08-14", end: "2025-08-14"},
-            {start: "2025-08-16", end: "2025-08-18"},
+            {start: "2025-08-14", end: "2025-08-18"},
             {start: "2025-08-29", end: "2025-08-29"}
         ]
     },
@@ -106,13 +105,25 @@ const employees = [
     }
 ];
 
+// Special events
+const events = [
+    {
+        name: "홀리그라운드 캠프",
+        color: "#FFD700",
+        start: "2025-07-28",
+        end: "2025-08-02",
+        period: "7/28(월)~8/2(토)"
+    }
+];
+
 const holidays = ["2025-08-15"];
 let selectedEmployee = null;
+let selectedEvent = null;
 
 // Special positioning rules for August
 const augustPositionRules = {
-    "2025-08-13": { "김새록": 0, "김명진": 1 },
-    "2025-08-18": { "김수경": 0, "조슬기": 1 }
+    "2025-08-13": { "김새록": 1, "김명진": 2 },
+    "2025-08-18": { "김수경": 1, "조슬기": 2 }
 };
 
 // Utility functions
@@ -225,18 +236,21 @@ function renderCalendar(containerId, year, month) {
     });
 }
 
-// Vacation scheduling functions
+// Vacation and event scheduling functions
 function scheduleVacations() {
     const julyContainer = document.getElementById('july-body');
     const augustContainer = document.getElementById('august-body');
     
     // Clear existing vacation bars
-    julyContainer.querySelectorAll('.vacation-bar').forEach(bar => bar.remove());
-    augustContainer.querySelectorAll('.vacation-bar').forEach(bar => bar.remove());
+    julyContainer.querySelectorAll('.vacation-bar, .event-bar').forEach(bar => bar.remove());
+    augustContainer.querySelectorAll('.vacation-bar, .event-bar').forEach(bar => bar.remove());
     
     // Process vacations for each month
     scheduleVacationsForMonth(julyContainer, 2025, 7);
     scheduleVacationsForMonth(augustContainer, 2025, 8);
+    
+    // Process events
+    scheduleEvents();
 }
 
 function scheduleVacationsForMonth(container, year, month) {
@@ -271,7 +285,7 @@ function scheduleVacationsForMonth(container, year, month) {
         });
     });
     
-    // Assign row numbers to vacations
+    // Assign row numbers to vacations (starting from row 1 to leave row 0 for events)
     const vacationRows = assignVacationRows(vacationsByDate, month);
     
     // Create vacation bars
@@ -285,6 +299,35 @@ function scheduleVacationsForMonth(container, year, month) {
                 createVacationBar(vacationContainer, vacationData, rowIndex);
             });
         }
+    });
+}
+
+function scheduleEvents() {
+    events.forEach(event => {
+        const startDate = parseDate(event.start);
+        const endDate = parseDate(event.end);
+        
+        const eventDates = getDateRange(startDate, endDate);
+        
+        eventDates.forEach(date => {
+            const dateKey = formatDate(date);
+            let container = null;
+            
+            // Determine which calendar this date belongs to
+            if (date.getMonth() === 6 && date.getFullYear() === 2025) { // July
+                container = document.getElementById('july-body');
+            } else if (date.getMonth() === 7 && date.getFullYear() === 2025) { // August
+                container = document.getElementById('august-body');
+            }
+            
+            if (container) {
+                const dayCell = container.querySelector(`[data-date="${dateKey}"]`);
+                if (dayCell) {
+                    const vacationContainer = dayCell.querySelector('.vacation-container');
+                    createEventBar(vacationContainer, { event: event, date: date });
+                }
+            }
+        });
     });
 }
 
@@ -334,7 +377,7 @@ function assignAugustVacationRows(continuousVacations, vacationsByDate) {
     const vacationRows = {};
     const dateRows = {};
     
-    // First, assign rows based on special rules
+    // First, assign rows based on special rules (add 1 to make room for events)
     Object.keys(augustPositionRules).forEach(dateKey => {
         const rules = augustPositionRules[dateKey];
         Object.keys(rules).forEach(employeeName => {
@@ -363,7 +406,7 @@ function assignAugustVacationRows(continuousVacations, vacationsByDate) {
     Object.keys(continuousVacations).forEach(key => {
         if (vacationRows[key] === undefined) {
             const continuous = continuousVacations[key];
-            let rowIndex = 0;
+            let rowIndex = 1; // Start from row 1 to leave row 0 for events
             let canUseRow = false;
             
             while (!canUseRow) {
@@ -407,7 +450,7 @@ function assignStandardVacationRows(continuousVacations) {
     
     Object.keys(continuousVacations).forEach(key => {
         const continuous = continuousVacations[key];
-        let rowIndex = 0;
+        let rowIndex = 1; // Start from row 1 to leave row 0 for events
         let canUseRow = false;
         
         while (!canUseRow) {
@@ -453,8 +496,6 @@ function createVacationBar(container, vacationData, rowIndex) {
     bar.style.right = '2px';
     bar.style.height = '22px';
     
-    // 조슬기 막대에는 테두리를 적용하지 않음 (이미 기본 스타일에 테두리가 없음)
-    
     const nameSpan = document.createElement('span');
     nameSpan.className = 'vacation-name';
     nameSpan.textContent = vacationData.employee.name;
@@ -471,6 +512,36 @@ function createVacationBar(container, vacationData, rowIndex) {
     bar.addEventListener('click', (e) => {
         e.stopPropagation();
         toggleEmployeeHighlight(vacationData.employee.name);
+    });
+    
+    container.appendChild(bar);
+}
+
+function createEventBar(container, eventData) {
+    const bar = document.createElement('div');
+    bar.className = 'event-bar';
+    bar.style.backgroundColor = eventData.event.color;
+    bar.style.top = '25px'; // Row 0 position
+    bar.style.left = '2px';
+    bar.style.right = '2px';
+    bar.style.height = '22px';
+    
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'event-name';
+    nameSpan.textContent = eventData.event.name;
+    bar.appendChild(nameSpan);
+    
+    // Add tooltip functionality
+    bar.addEventListener('mouseenter', (e) => {
+        showEventTooltip(e, eventData);
+    });
+    
+    bar.addEventListener('mouseleave', hideTooltip);
+    
+    // Add click functionality for highlighting
+    bar.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleEventHighlight(eventData.event.name);
     });
     
     container.appendChild(bar);
@@ -496,6 +567,25 @@ function showTooltip(event, vacationData) {
     tooltip.classList.add('show');
 }
 
+function showEventTooltip(event, eventData) {
+    const tooltip = document.getElementById('tooltip');
+    const startDate = parseDate(eventData.event.start);
+    const endDate = parseDate(eventData.event.end);
+    
+    const formatOptions = { month: 'long', day: 'numeric' };
+    const startStr = startDate.toLocaleDateString('ko-KR', formatOptions);
+    const endStr = endDate.toLocaleDateString('ko-KR', formatOptions);
+    
+    tooltip.innerHTML = `
+        <strong>${eventData.event.name}</strong><br>
+        ${startStr} - ${endStr}
+    `;
+    
+    tooltip.style.left = event.pageX + 'px';
+    tooltip.style.top = (event.pageY - 60) + 'px';
+    tooltip.classList.add('show');
+}
+
 function hideTooltip() {
     const tooltip = document.getElementById('tooltip');
     tooltip.classList.remove('show');
@@ -505,6 +595,31 @@ function hideTooltip() {
 function createLegend() {
     const legendGrid = document.getElementById('legend-grid');
     
+    // Add events to legend first
+    events.forEach(event => {
+        const legendItem = document.createElement('div');
+        legendItem.className = 'legend-item';
+        legendItem.setAttribute('data-event', event.name);
+        
+        const colorDiv = document.createElement('div');
+        colorDiv.className = 'legend-color';
+        colorDiv.style.backgroundColor = event.color;
+        
+        const nameDiv = document.createElement('div');
+        nameDiv.className = 'legend-name';
+        nameDiv.textContent = event.name;
+        
+        legendItem.appendChild(colorDiv);
+        legendItem.appendChild(nameDiv);
+        
+        legendItem.addEventListener('click', () => {
+            toggleEventHighlight(event.name);
+        });
+        
+        legendGrid.appendChild(legendItem);
+    });
+    
+    // Add employees to legend
     employees.forEach(employee => {
         const legendItem = document.createElement('div');
         legendItem.className = 'legend-item';
@@ -537,13 +652,14 @@ function toggleEmployeeHighlight(employeeName) {
         item.classList.remove('active');
     });
     
-    document.querySelectorAll('.vacation-bar').forEach(bar => {
+    document.querySelectorAll('.vacation-bar, .event-bar').forEach(bar => {
         bar.classList.remove('highlighted', 'dimmed');
     });
     
     if (!wasSelected) {
         // Set new selection
         selectedEmployee = employeeName;
+        selectedEvent = null;
         
         const legendItem = document.querySelector(`[data-employee="${employeeName}"]`);
         if (legendItem) {
@@ -558,9 +674,53 @@ function toggleEmployeeHighlight(employeeName) {
                 bar.classList.add('dimmed');
             }
         });
+        
+        document.querySelectorAll('.event-bar').forEach(bar => {
+            bar.classList.add('dimmed');
+        });
     } else {
         // Clear selection
         selectedEmployee = null;
+    }
+}
+
+function toggleEventHighlight(eventName) {
+    const wasSelected = selectedEvent === eventName;
+    
+    // Clear previous selection
+    document.querySelectorAll('.legend-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    document.querySelectorAll('.vacation-bar, .event-bar').forEach(bar => {
+        bar.classList.remove('highlighted', 'dimmed');
+    });
+    
+    if (!wasSelected) {
+        // Set new selection
+        selectedEvent = eventName;
+        selectedEmployee = null;
+        
+        const legendItem = document.querySelector(`[data-event="${eventName}"]`);
+        if (legendItem) {
+            legendItem.classList.add('active');
+        }
+        
+        document.querySelectorAll('.event-bar').forEach(bar => {
+            const barEventName = bar.querySelector('.event-name').textContent;
+            if (barEventName === eventName) {
+                bar.classList.add('highlighted');
+            } else {
+                bar.classList.add('dimmed');
+            }
+        });
+        
+        document.querySelectorAll('.vacation-bar').forEach(bar => {
+            bar.classList.add('dimmed');
+        });
+    } else {
+        // Clear selection
+        selectedEvent = null;
     }
 }
 
@@ -573,9 +733,12 @@ function init() {
     
     // Add click listener to clear selection when clicking outside
     document.addEventListener('click', (e) => {
-        if (!e.target.closest('.legend-item') && !e.target.closest('.vacation-bar')) {
+        if (!e.target.closest('.legend-item') && !e.target.closest('.vacation-bar') && !e.target.closest('.event-bar')) {
             if (selectedEmployee) {
                 toggleEmployeeHighlight(selectedEmployee);
+            }
+            if (selectedEvent) {
+                toggleEventHighlight(selectedEvent);
             }
         }
     });
