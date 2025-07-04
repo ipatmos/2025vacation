@@ -754,6 +754,7 @@ select.form-control {
   --container-md: 768px;
   --container-lg: 1024px;
   --container-xl: 1280px;
+  --container-2xl: 1400px;
 }
 
 /* Dark mode colors */
@@ -1186,13 +1187,9 @@ select.form-control {
   margin-left: auto;
   padding-right: var(--space-16);
   padding-left: var(--space-16);
+  max-width: 100%;
 }
 
-@media (min-width: 640px) {
-  .container {
-    max-width: var(--container-sm);
-  }
-}
 @media (min-width: 768px) {
   .container {
     max-width: var(--container-md);
@@ -1206,6 +1203,11 @@ select.form-control {
 @media (min-width: 1280px) {
   .container {
     max-width: var(--container-xl);
+  }
+}
+@media (min-width: 1400px) {
+  .container {
+    max-width: var(--container-2xl);
   }
 }
 
@@ -1335,19 +1337,33 @@ select.form-control {
 /* Calendar Container */
 .calendar-container {
     margin-bottom: var(--space-32);
+    width: 100%;
+    overflow-x: auto;
 }
 
 .calendar-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-24);
+    display: flex;
+    gap: var(--space-20);
     margin-bottom: var(--space-32);
+    min-width: 1200px;
+    width: 100%;
 }
 
-@media (max-width: 1024px) {
+.calendar-wrapper .calendar {
+    flex: 1;
+    min-width: 580px;
+}
+
+@media (max-width: 1279px) {
     .calendar-wrapper {
-        grid-template-columns: 1fr;
+        flex-direction: column;
+        min-width: auto;
         gap: var(--space-16);
+    }
+    
+    .calendar-wrapper .calendar {
+        min-width: auto;
+        flex: none;
     }
 }
 
@@ -1453,7 +1469,7 @@ select.form-control {
     font-weight: var(--font-weight-bold);
 }
 
-/* Vacation Bars */
+/* Vacation Container */
 .vacation-container {
     position: absolute;
     top: 0;
@@ -1463,9 +1479,10 @@ select.form-control {
     pointer-events: none;
 }
 
-.vacation-bar {
+/* Vacation and Event Bars */
+.vacation-bar, .event-bar {
     position: absolute;
-    height: 22px;
+    height: 18px;
     border-radius: var(--radius-sm);
     display: flex;
     align-items: center;
@@ -1480,32 +1497,41 @@ select.form-control {
     transition: all var(--duration-normal) var(--ease-standard);
     box-shadow: var(--shadow-sm);
     margin: 1px;
-    /* 기본적으로 테두리가 없음 - 조슬기 포함 모든 직원에게 동일 적용 */
-    border: none;
 }
 
-.vacation-bar:hover {
+.vacation-bar:hover, .event-bar:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
 }
 
-.vacation-bar.highlighted {
+.vacation-bar.highlighted, .event-bar.highlighted {
     transform: scale(1.05);
     box-shadow: var(--shadow-lg);
     z-index: 10;
 }
 
-.vacation-bar.dimmed {
+.vacation-bar.dimmed, .event-bar.dimmed {
     opacity: 0.3;
 }
 
-.vacation-name {
+.vacation-name, .event-name {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     padding: 0 var(--space-4);
     font-size: var(--font-size-xs);
     line-height: 1.2;
+}
+
+/* Special styling for event bars */
+.event-bar {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: var(--shadow-md);
+    font-weight: var(--font-weight-semibold);
+}
+
+.event-bar:hover {
+    border-color: rgba(255, 255, 255, 0.5);
 }
 
 /* Legend */
@@ -1568,7 +1594,7 @@ select.form-control {
 
 /* Tooltip */
 .tooltip {
-    position: absolute;
+    position: fixed;
     background: var(--color-text);
     color: var(--color-background);
     padding: var(--space-8) var(--space-12);
@@ -1588,7 +1614,7 @@ select.form-control {
     opacity: 1;
 }
 
-.tooltip::before {
+.tooltip::after {
     content: '';
     position: absolute;
     top: 100%;
@@ -1610,6 +1636,7 @@ select.form-control {
 
     .calendar-wrapper {
         gap: var(--space-16);
+        min-width: auto;
     }
 
     .calendar-day {
@@ -1621,8 +1648,8 @@ select.form-control {
         min-height: 140px;
     }
 
-    .vacation-bar {
-        height: 18px;
+    .vacation-bar, .event-bar {
+        height: 16px;
         font-size: 10px;
     }
 
@@ -1636,12 +1663,12 @@ select.form-control {
 }
 
 @media (max-width: 480px) {
-    .vacation-name {
+    .vacation-name, .event-name {
         font-size: 9px;
     }
     
-    .vacation-bar {
-        height: 16px;
+    .vacation-bar, .event-bar {
+        height: 14px;
     }
     
     .calendar-day {
@@ -1653,7 +1680,7 @@ select.form-control {
     }
 }
 
-/* Animation for vacation bars */
+/* Animation for vacation and event bars */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -1665,7 +1692,7 @@ select.form-control {
     }
 }
 
-.vacation-bar {
+.vacation-bar, .event-bar {
     animation: fadeInUp var(--duration-normal) var(--ease-standard);
 }
 
