@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>팻머스 2025 여름 휴가 일정</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .calendar-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .calendar {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .calendar-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+        .day-header {
+            background: #f1f3f4;
+            padding: 10px 5px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 12px;
+            color: #666;
+        }
+        .day-cell {
+            min-height: 80px;
+            border: 1px solid #e0e0e0;
+            position: relative;
+            padding: 2px;
+            background: white;
+        }
+        .day-cell.weekend {
+            background: #f8f9fa;
+        }
+        .day-cell.holiday {
+            background: #fff3cd;
+        }
+        .day-number {
+            font-size: 11px;
+            color: #666;
+            position: absolute;
+            top: 2px;
+            left: 4px;
+            z-index: 10;
+        }
+        .vacation-bar {
+            position: absolute;
+            height: 12px;
+            border-radius: 6px;
+            font-size: 8px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            z-index: 5;
+            left: 1px;
+            right: 1px;
+        }
+        .vacation-bar.highlighted {
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            z-index: 15;
+        }
+        .legend {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .legend h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        .legend-item:hover {
+            background: #e9ecef;
+        }
+        .legend-item.active {
+            background: #d4edda;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .legend-color {
+            width: 20px;
+            height: 12px;
+            border-radius: 6px;
+            margin-right: 8px;
+        }
+        .legend-name {
+            font-size: 12px;
+            font-weight: bold;
+        }
+        @media (max-width: 768px) {
+            .calendar-container {
+                grid-template-columns: 1fr;
+            }
+            .day-cell {
+                min-height: 60px;
+            }
+            .vacation-bar {
+                height: 10px;
+                font-size: 7px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>팻머스 2025 여름 휴가 일정</h1>
+        
+        <div class="calendar-container">
+            <div class="calendar">
+                <div class="calendar-header">2025년 7월</div>
+                <div class="calendar-grid">
+                    <div class="day-header">일</div>
+                    <div class="day-header">월</div>
+                    <div class="day-header">화</div>
+                    <div class="day-header">수</div>
+                    <div class="day-header">목</div>
+                    <div class="day-header">금</div>
+                    <div class="day-header">토</div>
+                    <div class="day-cell" data-date="2025-06-29"><div class="day-number">29</div></div>
+                    <div class="day-cell" data-date="2025-06-30"><div class="day-number">30</div></div>
+                    <div class="day-cell" data-date="2025-07-01"><div class="day-number">1</div></div>
+                    <div class="day-cell" data-date="2025-07-02"><div class="day-number">2</div></div>
+                    <div class="day-cell" data-date="2025-07-03"><div class="day-number">3</div></div>
+                    <div class="day-cell" data-date="2025-07-04"><div class="day-number">4</div></div>
+                    <div class="day-cell weekend" data-date="2025-07-05"><div class="day-number">5</div></div>
+                    <div class="day-cell weekend" data-date="2025-07-06"><div class="day-number">6</div></div>
+                    <div class="day-cell" data-date="2025-07-07"><div class="day-number">7</div></div>
+                    <div class="day-cell" data-date="2025-07-08"><div class="day-number">8</div></div>
+                    <div class="day-cell" data-date="2025-07-09"><div class="day-number">9</div></div>
+                    <div class="day-cell" data-date="2025-07-10"><div class="day-number">10</div></div>
+                    <div class="day-cell" data-date="2025-07-11"><div class="day-number">11</div></div>
+                    <div class="day-cell weekend" data-date="2025-07-12"><div class="day-number">12</div></div>
+                    <div class="day-cell weekend" data-date="2025-07-13"><div class="day-number">13</div></div>
+                    <div class="day-cell" data-date="2025-07-14"><div class="day-number">14</div></div>
+                    <div class="day-cell" data-date="2025-07-15"><div class="day-number">15</div></div>
+                    <div class="day-cell" data-date="2025-07-16"><div class="day-number">16</div></div>
+                    <div class="day-cell" data-date="2025-07-17"><div class="day-number">17</div></div>
+                    <div class="day-cell" data-date="2025-07-18"><div class="day-number">18</div></div>
+                    <div class="day-cell weekend" data-date="2025-07-19"><div class="day-number">19</div></div>
+                    <div class="day-cell weekend" data-date="2025-07-20"><div class="day-number">20</div></div>
+                    <div class="day-cell" data-date="2025-07-21"><div class="day-number">21</div></div>
+                    <div class="day-cell" data-date="2025-07-22"><div class="day-number">22</div></div>
+                    <div class="day-cell" data-date="2025-07-23"><div class="day-number">23</div></div>
+                    <div class="day-cell" data-date="2025-07-24"><div class="day-number">24</div></div>
+                    <div class="day-cell" data-date="2025-07-25"><div class="day-number">25</div></div>
+                    <div class="day-cell weekend" data-date="2025-07-26"><div class="day-number">26</div></div>
+                    <div class="day-cell weekend" data-date="2025-07-27"><div class="day-number">27</div></div>
+                    <div class="day-cell" data-date="2025-07-28"><div class="day-number">28</div></div>
+                    <div class="day-cell" data-date="2025-07-29"><div class="day-number">29</div></div>
+                    <div class="day-cell" data-date="2025-07-30"><div class="day-number">30</div></div>
+                    <div class="day-cell" data-date="2025-07-31"><div class="day-number">31</div></div>
+                    <div class="day-cell" data-date="2025-08-01"><div class="day-number">1</div></div>
+                    <div class="day-cell weekend" data-date="2025-08-02"><div class="day-number">2</div></div>
+                </div>
+            </div>
+            
+            <div class="calendar">
+                <div class="calendar-header">2025년 8월</div>
+                <div class="calendar-grid">
+                    <div class="day-header">일</div>
+                    <div class="day-header">월</div>
+                    <div class="day-header">화</div>
+                    <div class="day-header">수</div>
+                    <div class="day-header">목</div>
+                    <div class="day-header">금</div>
+                    <div class="day-header">토</div>
+                    <div class="day-cell weekend" data-date="2025-08-03"><div class="day-number">3</div></div>
+                    <div class="day-cell" data-date="2025-08-04"><div class="day-number">4</div></div>
+                    <div class="day-cell" data-date="2025-08-05"><div class="day-number">5</div></div>
+                    <div class="day-cell" data-date="2025-08-06"><div class="day-number">6</div></div>
+                    <div class="day-cell" data-date="2025-08-07"><div class="day-number">7</div></div>
+                    <div class="day-cell" data-date="2025-08-08"><div class="day-number">8</div></div>
+                    <div class="day-cell weekend" data-date="2025-08-09"><div class="day-number">9</div></div>
+                    <div class="day-cell weekend" data-date="2025-08-10"><div class="day-number">10</div></div>
+                    <div class="day-cell" data-date="2025-08-11"><div class="day-number">11</div></div>
+                    <div class="day-cell" data-date="2025-08-12"><div class="day-number">12</div></div>
+                    <div class="day-cell" data-date="2025-08-13"><div class="day-number">13</div></div>
+                    <div class="day-cell" data-date="2025-08-14"><div class="day-number">14</div></div>
+                    <div class="day-cell holiday" data-date="2025-08-15"><div class="day-number">15</div></div>
+                    <div class="day-cell weekend" data-date="2025-08-16"><div class="day-number">16</div></div>
+                    <div class="day-cell weekend" data-date="2025-08-17"><div class="day-number">17</div></div>
+                    <div class="day-cell" data-date="2025-08-18"><div class="day-number">18</div></div>
+                    <div class="day-cell" data-date="2025-08-19"><div class="day-number">19</div></div>
+                    <div class="day-cell" data-date="2025-08-20"><div class="day-number">20</div></div>
+                    <div class="day-cell" data-date="2025-08-21"><div class="day-number">21</div></div>
+                    <div class="day-cell" data-date="2025-08-22"><div class="day-number">22</div></div>
+                    <div class="day-cell weekend" data-date="2025-08-23"><div class="day-number">23</div></div>
+                    <div class="day-cell weekend" data-date="2025-08-24"><div class="day-number">24</div></div>
+                    <div class="day-cell" data-date="2025-08-25"><div class="day-number">25</div></div>
+                    <div class="day-cell" data-date="2025-08-26"><div class="day-number">26</div></div>
+                    <div class="day-cell" data-date="2025-08-27"><div class="day-number">27</div></div>
+                    <div class="day-cell" data-date="2025-08-28"><div class="day-number">28</div></div>
+                    <div class="day-cell" data-date="2025-08-29"><div class="day-number">29</div></div>
+                    <div class="day-cell weekend" data-date="2025-08-30"><div class="day-number">30</div></div>
+                    <div class="day-cell weekend" data-date="2025-08-31"><div class="day-number">31</div></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <h3>팻머스 구성원별 휴가 일정</h3>
+            <div class="legend-grid" id="legendGrid">
+                <!-- 범례는 JavaScript에서 생성됩니다 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 휴가 데이터 정의
+        const vacationData = {
+            '한혜미': {
+                color: '#9B59B6',
+                vacations: [
+                    { start: '2025-06-30', end: '2025-07-02' },
+                    { start: '2025-07-14', end: '2025-07-15' }
+                ]
+            },
+            '박지원': {
+                color: '#4ECDC4',
+                vacations: [
+                    { start: '2025-07-25', end: '2025-07-25' },
+                    { start: '2025-07-28', end: '2025-07-28' },
+                    { start: '2025-08-07', end: '2025-08-08' },
+                    { start: '2025-08-14', end: '2025-08-14' }
+                ]
+            },
+            '신선영': {
+                color: '#45B7D1',
+                vacations: [
+                    { start: '2025-07-21', end: '2025-07-22' },
+                    { start: '2025-08-20', end: '2025-08-22' }
+                ]
+            },
+            '김수경': {
+                color: '#FFA07A',
+                vacations: [
+                    { start: '2025-07-10', end: '2025-07-11' },
+                    { start: '2025-08-14', end: '2025-08-14' },
+                    { start: '2025-08-18', end: '2025-08-19' }
+                ]
+            },
+            '김새록': {
+                color: '#98D8C8',
+                vacations: [
+                    { start: '2025-08-13', end: '2025-08-14' }
+                ]
+            },
+            '이형노': {
+                color: '#F7DC6F',
+                vacations: [
+                    { start: '2025-08-14', end: '2025-08-14' },
+                    { start: '2025-08-21', end: '2025-08-22' }
+                ]
+            },
+            '김다애': {
+                color: '#BB8FCE',
+                vacations: [
+                    { start: '2025-08-11', end: '2025-08-12' },
+                    { start: '2025-08-25', end: '2025-08-26' }
+                ]
+            },
+            '안호영': {
+                color: '#85C1E9',
+                vacations: [
+                    { start: '2025-08-08', end: '2025-08-12' },
+                    { start: '2025-08-25', end: '2025-08-26' }
+                ]
+            },
+            '이예은': {
+                color: '#F8C471',
+                vacations: [
+                    { start: '2025-08-25', end: '2025-08-26' },
+                    { start: '2025-08-29', end: '2025-08-29' }
+                ]
+            },
+            '김명진': {
+                color: '#82E0AA',
+                vacations: [
+                    { start: '2025-08-11', end: '2025-08-13' },
+                    { start: '2025-08-21', end: '2025-08-22' }
+                ]
+            },
+            '정지수': {
+                color: '#F1948A',
+                vacations: [
+                    { start: '2025-08-08', end: '2025-08-08' },
+                    { start: '2025-08-20', end: '2025-08-22' }
+                ]
+            },
+            '구창본': {
+                color: '#AED6F1',
+                vacations: [
+                    { start: '2025-08-12', end: '2025-08-14' }
+                ]
+            },
+            '조슬기': {
+                color: '#D7BDE2',
+                vacations: [
+                    { start: '2025-08-18', end: '2025-08-18' },
+                    { start: '2025-08-28', end: '2025-08-29' }
+                ]
+            }
+        };
+
+        // 홀리그라운드 캠프 데이터
+        const holygroundCamp = {
+            color: '#FF4444',
+            start: '2025-07-28',
+            end: '2025-08-02'
+        };
+
+        // 주말과 공휴일 확인 함수
+        function isWeekend(dateStr) {
+            const date = new Date(dateStr);
+            const day = date.getDay();
+            return day === 0 || day === 6; // 일요일(0) 또는 토요일(6)
+        }
+
+        function isHoliday(dateStr) {
+            return dateStr === '2025-08-15'; // 광복절
+        }
+
+        // 날짜 범위 생성 함수
+        function getDateRange(startDate, endDate) {
+            const dates = [];
+            const current = new Date(startDate);
+            const end = new Date(endDate);
+            
+            while (current <= end) {
+                const dateStr = current.toISOString().split('T')[0];
+                if (!isWeekend(dateStr) && !isHoliday(dateStr)) {
+                    dates.push(dateStr);
+                }
+                current.setDate(current.getDate() + 1);
+            }
+            return dates;
+        }
+
+        // 휴가 막대 생성 함수
+        function createVacationBars() {
+            // 각 날짜별로 휴가자 정보 수집
+            const dailyVacations = {};
+            
+            // 개인 휴가 처리
+            Object.entries(vacationData).forEach(([name, data]) => {
+                data.vacations.forEach(vacation => {
+                    const dates = getDateRange(vacation.start, vacation.end);
+                    dates.forEach(date => {
+                        if (!dailyVacations[date]) {
+                            dailyVacations[date] = [];
+                        }
+                        dailyVacations[date].push({
+                            name: name,
+                            color: data.color,
+                            type: 'vacation',
+                            vacationStart: vacation.start,
+                            vacationEnd: vacation.end
+                        });
+                    });
+                });
+            });
+
+            // 홀리그라운드 캠프 처리
+            const campDates = getDateRange(holygroundCamp.start, holygroundCamp.end);
+            campDates.forEach(date => {
+                if (!dailyVacations[date]) {
+                    dailyVacations[date] = [];
+                }
+                dailyVacations[date].unshift({ // 맨 앞에 추가하여 상단에 표시
+                    name: '홀리그라운드',
+                    color: holygroundCamp.color,
+                    type: 'event',
+                    vacationStart: holygroundCamp.start,
+                    vacationEnd: holygroundCamp.end
+                });
+            });
+
+            // 연속 휴가 위치 수동 지정
+            const fixedPositions = {
+                '김명진-2025-08-11-2025-08-13': 1,  // 8월 11일-13일 : 1열
+                '구창본-2025-08-12-2025-08-14': 2,  // 8월 12일-14일 : 2열
+                '안호영-2025-08-08-2025-08-12': 3,  // 8월 8일-12일 : 3열
+                '김다애-2025-08-11-2025-08-12': 4,  // 8월 11일-12일 : 4열
+                '김새록-2025-08-13-2025-08-14': 3   // 8월 13일-14일 : 3열
+            };
+            
+            // 8월 14일 특별 순서 지정
+            const aug14Order = ['김수경', '구창본', '김새록', '박지원', '이형노'];
+            
+            // 각 날짜별로 정렬 (연속 휴가 고려)
+            Object.keys(dailyVacations).forEach(date => {
+                if (date === '2025-08-14') {
+                    // 8월 14일 특별 처리
+                    dailyVacations[date].sort((a, b) => {
+                        if (a.type === 'event' && b.type === 'vacation') return -1;
+                        if (a.type === 'vacation' && b.type === 'event') return 1;
+                        
+                        if (a.type === 'vacation' && b.type === 'vacation') {
+                            const aIndex = aug14Order.indexOf(a.name);
+                            const bIndex = aug14Order.indexOf(b.name);
+                            
+                            if (aIndex !== -1 && bIndex !== -1) {
+                                return aIndex - bIndex;
+                            } else if (aIndex !== -1) {
+                                return -1;
+                            } else if (bIndex !== -1) {
+                                return 1;
+                            }
+                        }
+                        
+                        return 0;
+                    });
+                } else {
+                    dailyVacations[date].sort((a, b) => {
+                        // 홀리그라운드 캠프를 항상 최상단에
+                        if (a.type === 'event' && b.type === 'vacation') return -1;
+                        if (a.type === 'vacation' && b.type === 'event') return 1;
+                        
+                        if (a.type === 'vacation' && b.type === 'vacation') {
+                            const aId = `${a.name}-${a.vacationStart}-${a.vacationEnd}`;
+                            const bId = `${b.name}-${b.vacationStart}-${b.vacationEnd}`;
+                            
+                            const aPos = fixedPositions[aId] || 99;
+                            const bPos = fixedPositions[bId] || 99;
+                            
+                            if (aPos !== bPos) {
+                                return aPos - bPos;
+                            }
+                            
+                            // 고정 위치가 없는 경우 휴가 시작일 기준으로 정렬
+                            return a.vacationStart.localeCompare(b.vacationStart);
+                        }
+                        
+                        return 0;
+                    });
+                }
+            });
+            
+            // 8월 11일에 투명 막대 추가
+            if (dailyVacations['2025-08-11']) {
+                // 김명진(1열)과 안호영(3열) 사이에 투명 막대 삽입
+                const aug11List = dailyVacations['2025-08-11'];
+                const transparentBar = {
+                    name: '',
+                    color: 'transparent',
+                    type: 'spacer',
+                    vacationStart: '2025-08-11',
+                    vacationEnd: '2025-08-11'
+                };
+                
+                // 김명진 다음 위치에 투명 막대 삽입
+                aug11List.splice(1, 0, transparentBar);
+            }
+
+            // 막대 생성
+            Object.entries(dailyVacations).forEach(([date, vacations]) => {
+                const cell = document.querySelector(`[data-date="${date}"]`);
+                if (cell) {
+                    vacations.forEach((vacation, index) => {
+                        const bar = document.createElement('div');
+                        bar.className = 'vacation-bar';
+                        bar.style.backgroundColor = vacation.color;
+                        bar.style.top = `${20 + index * 14}px`;
+                        bar.textContent = vacation.name;
+                        bar.dataset.person = vacation.name;
+                        cell.appendChild(bar);
+                    });
+                }
+            });
+        }
+
+        // 범례 생성 함수
+        function createLegend() {
+            const legendGrid = document.getElementById('legendGrid');
+            
+            // 홀리그라운드 캠프 범례 추가
+            const campItem = document.createElement('div');
+            campItem.className = 'legend-item';
+            campItem.dataset.person = '홀리그라운드';
+            campItem.innerHTML = `
+                <div class="legend-color" style="background-color: ${holygroundCamp.color}"></div>
+                <span class="legend-name">홀리그라운드</span>
+            `;
+            legendGrid.appendChild(campItem);
+
+            // 개인 휴가 범례 추가
+            Object.entries(vacationData).forEach(([name, data]) => {
+                const item = document.createElement('div');
+                item.className = 'legend-item';
+                item.dataset.person = name;
+                item.innerHTML = `
+                    <div class="legend-color" style="background-color: ${data.color}"></div>
+                    <span class="legend-name">${name}</span>
+                `;
+                legendGrid.appendChild(item);
+            });
+
+            // 클릭 이벤트 추가
+            legendGrid.addEventListener('click', function(e) {
+                const legendItem = e.target.closest('.legend-item');
+                if (legendItem) {
+                    const person = legendItem.dataset.person;
+                    toggleHighlight(person);
+                    legendItem.classList.toggle('active');
+                }
+            });
+        }
+
+        // 강조 표시 토글 함수
+        function toggleHighlight(person) {
+            const bars = document.querySelectorAll(`[data-person="${person}"]`);
+            bars.forEach(bar => {
+                bar.classList.toggle('highlighted');
+            });
+        }
+
+        // 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            createVacationBars();
+            createLegend();
+        });
+    </script>
+</body>
+</html>
